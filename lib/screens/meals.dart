@@ -8,20 +8,17 @@ class MealsScreen extends StatelessWidget {
     super.key,
     this.title,
     required this.meals,
-   
   });
 
   final String?
       title; //since two titles are showing so we use scfold widget conditionally
   final List<Meal> meals;
-  
 
   void selectMeal(BuildContext context, Meal meal) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => MealDetailsScreen(
           meal: meal,
-          
         ),
       ),
     );
@@ -59,13 +56,14 @@ class MealsScreen extends StatelessWidget {
 
     if (meals.isNotEmpty) {
       content = ListView.builder(
-          itemCount: meals.length,
-          itemBuilder: (ctx, index) => MealItem(
-                meal: meals[index],
-                onSelectMeal: (meal) {
-                  selectMeal(context, meal);
-                },
-              ));
+        itemCount: meals.length,
+        itemBuilder: (ctx, index) => MealItem(
+          meal: meals[index],
+          onSelectMeal: (meal) {
+            selectMeal(context, meal);
+          },
+        ),
+      );
     }
 
     if (title == null) {

@@ -45,13 +45,16 @@ class MealItem extends StatelessWidget {
         },
         child: Stack(
           children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              fit: BoxFit
-                  .cover, //to zoom image if image it cutoff on edge to rendere full allover the card
-              height: 200,
-              width: double.infinity,
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                fit: BoxFit
+                    .cover, //to zoom image if image it cutoff on edge to rendere full allover the card
+                height: 200,
+                width: double.infinity,
+              ),
             ),
             Positioned(
               left: 0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/providers/favorites_provider.dart';
@@ -7,7 +8,6 @@ class MealDetailsScreen extends ConsumerWidget {
   const MealDetailsScreen({
     super.key,
     required this.meal,
-    
   });
 
   final Meal meal;
@@ -23,7 +23,8 @@ class MealDetailsScreen extends ConsumerWidget {
             IconButton(
               onPressed: () {
                 final wasAdded = ref
-                    .read(favoriteMealsProvider.notifier)             //read (setting og listner)
+                    .read(favoriteMealsProvider
+                        .notifier) //read (setting og listner)
                     .toggleMealFavoriteStatus(meal);
                 ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -34,18 +35,38 @@ class MealDetailsScreen extends ConsumerWidget {
                   ),
                 );
               },
-              icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+              icon: AnimatedSwitcher(
+                duration: const Duration(microseconds: 300),
+                transitionBuilder: (child, animation) {
+                  return RotationTransition(
+                    turns: Tween<double>(
+                            //Tween gives us more flexibility to cutomise the animination
+                            begin: 0.8,
+                            end: 1)
+                        .animate(animation),
+                    child: child,
+                  );
+                },
+                child: Icon(
+                  isFavorite ? Icons.star : Icons.star_border,
+                  key: ValueKey(
+                      isFavorite), //key helps to differentiate between the two widget that are of same type but having differnt data attached to them , here Animated switcher take this value key in account and see wether the isFavorite true or false and work according to them
+                ),
+              ),
             ),
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network(
-                meal.imageUrl,
-                width: double.infinity,
-                height: 300,
-                fit: BoxFit.cover,
+              Hero(
+                tag: meal.id,
+                child: Image.network(
+                  meal.imageUrl,
+                  width: double.infinity,
+                  height: 300,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(
                 height: 14,
